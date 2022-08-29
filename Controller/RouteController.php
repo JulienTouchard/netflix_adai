@@ -1,6 +1,8 @@
 <?php
 class RouteController {
     public function __construct($server){
+        // pour passer des parametres à une class je doit impérativement utiliser
+        // une fonction __construct($param1,$param2,etc...)
         $this->server = $server;
     }
     private $server;

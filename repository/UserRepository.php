@@ -1,5 +1,6 @@
 <?php
 require_once("../inc/ConnectDB.php");
+// les class repository seront les class utilisées pour passer nos requetes
 class UserRepository
 {
 

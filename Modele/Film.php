@@ -1,5 +1,6 @@
 <?php
-class Film
+require_once("../repository/FilmRepository.php");
+class Film extends FilmRepository
 {
     public function __construct(
         $id_movie,
