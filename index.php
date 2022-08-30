@@ -1,6 +1,9 @@
 <?php
 session_start();
-require_once("./Controller/RouteController.php");
+if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
+    $pref = "./";
+} else {$pref = '../';}
+require_once($pref."Controller/RouteController.php");
 $routeController = new RouteController($_SERVER);
 ?>
 <!DOCTYPE html>
@@ -16,7 +19,7 @@ $routeController = new RouteController($_SERVER);
 <body>
     <header>
         <?php
-        include_once("./View/menu.php");
+        include_once($routeController->getRoute("menu"));
         ?>
     </header>
 </body>

@@ -3,7 +3,6 @@ require_once($routeController->getController("SessionController"));
 $activeSession = SessionController::activeSession();
 require_once($routeController->getController("FilmController"));
 $genres = FilmController::menuGenre();
-var_dump($genres);
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">

@@ -1,5 +1,4 @@
 <?php
-
 if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
     $pref = "./";
 } else {$pref = '../';}
@@ -10,7 +9,8 @@ require_once($routeController->getRepository("FilmRepository"));
 class FilmController
 {
     public static function selectRandomFilms($nbFilm){
-        $urlPoster = "../assets/img/posters/";
+        $routeController = new RouteController($_SERVER);
+        $urlPoster = $routeController->getAssets()."img/posters/";
         $ext = ".jpg";
         $filmRepository = new FilmRepository;
         $films = $filmRepository->selectFilmsR($nbFilm);
@@ -26,5 +26,22 @@ class FilmController
     public static function menuGenre(){
         $filmRepository = new FilmRepository;
         return $filmRepository->selectGenres();
+    }
+    public static function getFilmsByGenre($genre){
+        $filmRepository = new FilmRepository;
+        $routeController = new RouteController($_SERVER);
+        $urlPoster = $routeController->getAssets()."img/posters/";
+        $ext = ".jpg";
+        $index = 0;
+        $nbFilms = 20;
+        $films = $filmRepository->selectFilmsByGenre($genre,$index,$nbFilms);
+        foreach ($films as $key => $value) {
+            if(file_exists($urlPoster.$value['id_movie'].$ext)){
+                $films[$key]['urlFilm'] = $urlPoster.$value['id_movie'].$ext;
+            } else {
+                $films[$key]['urlFilm'] = $urlPoster."default.jpg";
+            }
+        }
+        return $films;
     }   
 }
