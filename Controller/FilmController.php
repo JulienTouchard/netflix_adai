@@ -1,7 +1,12 @@
 <?php
 
-
-require_once("../Modele/Film.php");
+if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
+    $pref = "./";
+} else {$pref = '../';}
+require_once($pref."Controller/RouteController.php");
+$routeController = new RouteController($_SERVER);
+require_once($routeController->getModele("Film"));
+require_once($routeController->getRepository("FilmRepository"));
 class FilmController
 {
     public static function selectRandomFilms($nbFilm){
@@ -17,6 +22,9 @@ class FilmController
             }
         }
         return $films;
-        
-    }    
+    } 
+    public static function menuGenre(){
+        $filmRepository = new FilmRepository;
+        return $filmRepository->selectGenres();
+    }   
 }

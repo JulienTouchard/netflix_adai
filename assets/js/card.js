@@ -24,7 +24,7 @@ function Card(props) {
                 <div className="card-body">
                     <p className="card-text" id="plot">{props.info.plot}</p>
                 </div>
-                <ul className="list-group list-group-flush">props.info
+                <ul className="list-group list-group-flush">
                     <li className="list-group-item" id="year">{props.info.year}</li>
                     <li className="list-group-item" id="genre">{props.info.genres}</li>
                     <li className="list-group-item" id="directors">{props.info.directors}</li>

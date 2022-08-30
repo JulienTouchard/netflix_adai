@@ -1,6 +1,12 @@
 <?php
-require_once("../inc/ConnectDB.php");
-class FilmRepository {
+if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
+    $pref = "./";
+} else {$pref = '../';}
+require_once($pref."Controller/RouteController.php");
+$routeController = new RouteController($_SERVER);
+require_once($routeController->getInc("ConnectDB"));
+class FilmRepository
+{
     public function getFilmById($id)
     {
         $pdo = new ConnectDB;
@@ -20,11 +26,24 @@ class FilmRepository {
         );
         return $film;
     }
-    public function selectFilmsR($nbFilm){
+    public function selectFilmsR($nbFilm)
+    {
         $pdo = new ConnectDB;
         $rq = "SELECT * FROM movies_full
         ORDER BY RAND()
         LIMIT $nbFilm";
+        $requete = $pdo->connect()->prepare($rq);
+        $requete->execute();
+        return $requete->fetchall();
+    }
+    public function selectGenres()
+    {
+        $pdo = new ConnectDB;
+        $rq = "SELECT
+            substring_index(genres, ',', 1) 
+            AS genre
+            FROM movies_full GROUP BY genre
+            ";
         $requete = $pdo->connect()->prepare($rq);
         $requete->execute();
         return $requete->fetchall();

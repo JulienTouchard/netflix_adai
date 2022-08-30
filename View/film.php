@@ -7,6 +7,7 @@ require_once("../Controller/FilmController.php");
 
 $films = FilmController::selectRandomFilms(10);
 $films = json_encode($films);
+
 ?>
 
 <!DOCTYPE html>

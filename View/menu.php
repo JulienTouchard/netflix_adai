@@ -1,6 +1,9 @@
 <?php
 require_once($routeController->getController("SessionController"));
 $activeSession = SessionController::activeSession();
+require_once($routeController->getController("FilmController"));
+$genres = FilmController::menuGenre();
+var_dump($genres);
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
@@ -20,6 +23,15 @@ $activeSession = SessionController::activeSession();
         </li>
         <li class="d-flex align-items-center">
         <a class="nav-link" href="<?= $routeController->getRoute("film"); ?>">Films</a>
+        </li>
+       <!--  drop down de selection des genres de film -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Selectionnez un genre :</a>
+          <div class="dropdown-menu">
+          <?php foreach ($genres as $key => $value) { ?>
+            <a class="dropdown-item" href="<?= $routeController->getRoute("categorie"); ?>?genre=<?= $value['genre'] ?>"><?= $value['genre'] ?></a>
+          <?php } ?>  
+          </div>
         </li>
     <?php //else : ?>
     <?php } else { ?>
