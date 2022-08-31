@@ -5,7 +5,7 @@ if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
 } else {$pref = '../';}
 require_once($pref."Controller/RouteController.php");
 $routeController = new RouteController($_SERVER);
-require_once($routeController->getController("User"));
+require_once($routeController->getController("UserController"));
 $userController = new UserController();
 $register = $userController->register($_POST);
 
@@ -18,6 +18,8 @@ $register = $userController->register($_POST);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://bootswatch.com/5/cyborg/bootstrap.min.css">
     <title>registration form</title>
 </head>
 

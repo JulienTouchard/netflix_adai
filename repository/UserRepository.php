@@ -1,5 +1,10 @@
 <?php
-require_once("../inc/ConnectDB.php");
+if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
+    $pref = "./";
+} else {$pref = '../';}
+require_once($pref."Controller/RouteController.php");
+$routeController = new RouteController($_SERVER);
+require_once($routeController->getInc("ConnectDB"));
 // les class repository seront les class utilisées pour passer nos requetes
 class UserRepository
 {
