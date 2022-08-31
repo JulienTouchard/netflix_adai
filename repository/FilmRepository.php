@@ -56,4 +56,12 @@ class FilmRepository
         $requete->execute();
         return $requete->fetchall();
     }
+    public function pageByGenre($genre){
+        $pdo = new ConnectDB;
+        $rq = "SELECT id_movie FROM movies_full WHERE genres LIKE :genre";
+        $requete = $pdo->connect()->prepare($rq);
+        $requete->bindValue(":genre", '%'.$genre.'%', PDO::PARAM_STR);
+        $requete->execute();
+        return $requete->rowCount();
+    }
 }

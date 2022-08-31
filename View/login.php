@@ -1,6 +1,11 @@
 <?php 
 session_start();
-require_once("../Controller/UserController.php");
+if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
+    $pref = "./";
+} else {$pref = '../';}
+require_once($pref."Controller/RouteController.php");
+$routeController = new RouteController($_SERVER);
+require_once($routeController->getController("User"));
 $userController = new UserController;
 $login = $userController->login($_POST,$_SESSION);
 
@@ -15,10 +20,18 @@ $login = $userController->login($_POST,$_SESSION);
     <title>Document</title>
 </head>
 <body>
-    <form action="" method="post">
-        <div><input type="text" name="login" placeholder="Entrez votre login ou email"><span></span></div>
-        <div><input type="password" name="pwd" placeholder="Entrez votre mot de passe"><span></span></div>
-        <div><input type="submit" value="Envoyer" name="submited"><span></span></div>
-    </form>
+<header>
+        <?php
+        include_once($routeController->getRoute("menu"));
+        ?>
+    </header>
+    <main>
+
+        <form action="" method="post">
+            <div><input type="text" name="login" placeholder="Entrez votre login ou email"><span></span></div>
+            <div><input type="password" name="pwd" placeholder="Entrez votre mot de passe"><span></span></div>
+            <div><input type="submit" value="Envoyer" name="submited"><span></span></div>
+        </form>
+    </main>
 </body>
 </html>

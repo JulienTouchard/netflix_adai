@@ -1,6 +1,11 @@
 <?php
 session_start();
-require_once("../Controller/UserController.php");
+if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
+    $pref = "./";
+} else {$pref = '../';}
+require_once($pref."Controller/RouteController.php");
+$routeController = new RouteController($_SERVER);
+require_once($routeController->getController("User"));
 $userController = new UserController();
 $register = $userController->register($_POST);
 
@@ -17,6 +22,11 @@ $register = $userController->register($_POST);
 </head>
 
 <body>
+<header>
+        <?php
+        include_once($routeController->getRoute("menu"));
+        ?>
+    </header>
     <section class="formSignup">
         <form action="" method="post">
             <div>

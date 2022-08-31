@@ -3,13 +3,26 @@ session_start();
 require_once("../Controller/RouteController.php");
 $routeController = new RouteController($_SERVER);
 require_once($routeController->getController("FilmController"));
-$films = FilmController::getFilmsByGenre($_GET['genre']);
+$nbPage = FilmController::getNbPage($_GET['genre']);
+
+if(isset($_GET['currentPage']) && !empty($_GET['currentPage'])){
+    $currentPage = strip_tags($_GET['currentPage']);
+    if (!is_numeric($currentPage)){
+        if(explode(",", $currentPage)[0] === "next"){
+            $currentPage = intval(explode(",", $currentPage)[1])+1;
+        }else {
+            $currentPage = intval(explode(",", $currentPage)[1])-1;
+        }
+    }
+} else {
+    $currentPage = 1;
+}
+$films = FilmController::getFilmsByGenre($_GET['genre'],$currentPage);
 $films = json_encode($films);
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,32 +45,31 @@ $films = json_encode($films);
         <?php include_once($routeController->getRoute("menu")); ?>
     </header>
     <main>
-        <div id="cardsFrame"></div>
-        <div>
-            <ul class="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#">&laquo;</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link" href="#">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">2</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">3</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">4</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">5</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">&raquo;</a>
-                </li>
-            </ul>
-        </div>
+        <section id="displayFilms">
+            <h2><?= $_GET['genre'] ?></h2>
+            <div id="cardsFrame"></div>
+            <div>
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="
+                        <?= $routeController->getRoute("categorie")."?genre=".$_GET['genre']."&currentPage=prev,".$currentPage?>
+                        ">&laquo;</a>
+                    </li>
+                    <?php for($i=1;$i<$nbPage+1;$i++) : ?>
+                    <li class="page-item active">
+                        <a class="page-link" href="
+                        <?= $routeController->getRoute("categorie")."?genre=".$_GET['genre']."&currentPage=$i"?>
+                        "><?=$i?></a>
+                    </li>
+                    <?php endfor ?>
+                    <li class="page-item">
+                        <a class="page-link" href="
+                        <?= $routeController->getRoute("categorie")."?genre=".$_GET['genre']."&currentPage=next,".$currentPage?>
+                        ">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
     </main>
 
 
