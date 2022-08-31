@@ -1,9 +1,14 @@
 <?php
-require_once("../Modele/User.php");
-require_once("../Controller/FormVerif.php");
-require_once("../repository/UserRepository.php");
-require_once("../Controller/SessionController.php");
-require_once("../Controller/RouteController.php");
+if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
+    $pref = "./";
+} else {$pref = '../';}
+require_once($pref."Controller/RouteController.php");
+$routeController = new RouteController($_SERVER);
+require_once($routeController->getModele("User"));
+require_once($routeController->getController("FormVerif"));
+require_once($routeController->getRepository("UserRepository"));
+require_once($routeController->getController("SessionController"));
+
 class UserController extends FormVerif
 {
     public $errors = [];

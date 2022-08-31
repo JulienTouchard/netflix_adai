@@ -3,20 +3,29 @@ session_start();
 require_once("../Controller/RouteController.php");
 $routeController = new RouteController($_SERVER);
 require_once($routeController->getController("FilmController"));
+///////////////////////////////////
+$activePrev = false;
+$activePage = false;
 $nbPage = FilmController::getNbPage($_GET['genre']);
-
 if(isset($_GET['currentPage']) && !empty($_GET['currentPage'])){
     $currentPage = strip_tags($_GET['currentPage']);
     if (!is_numeric($currentPage)){
-        if(explode(",", $currentPage)[0] === "next"){
-            $currentPage = intval(explode(",", $currentPage)[1])+1;
-        }else {
-            $currentPage = intval(explode(",", $currentPage)[1])-1;
+        $tmpCurrentPage = explode(",", $currentPage);
+        if($tmpCurrentPage[0] === "next"){
+            $currentPage = intval($tmpCurrentPage[1])+1;
+        } else {
+            if($tmpCurrentPage[1] == 2){
+               $activePrev = true; 
+            } else {
+               $currentPage = intval($tmpCurrentPage[1])-1; 
+            }
         }
     }
 } else {
     $currentPage = 1;
+    $activePrev = true;
 }
+////////////////////////////////////////////
 $films = FilmController::getFilmsByGenre($_GET['genre'],$currentPage);
 $films = json_encode($films);
 ?>
@@ -51,18 +60,18 @@ $films = json_encode($films);
             <div>
                 <ul class="pagination">
                     <li class="page-item">
-                        <a class="page-link" href="
+                        <a class="page-link <?= $activePrev ? "disabled" : "" ?>" href="
                         <?= $routeController->getRoute("categorie")."?genre=".$_GET['genre']."&currentPage=prev,".$currentPage?>
                         ">&laquo;</a>
                     </li>
                     <?php for($i=1;$i<$nbPage+1;$i++) : ?>
                     <li class="page-item active">
-                        <a class="page-link" href="
+                        <a class="page-link " href="
                         <?= $routeController->getRoute("categorie")."?genre=".$_GET['genre']."&currentPage=$i"?>
                         "><?=$i?></a>
                     </li>
                     <?php endfor ?>
-                    <li class="page-item">
+                    <li class="page-item ">
                         <a class="page-link" href="
                         <?= $routeController->getRoute("categorie")."?genre=".$_GET['genre']."&currentPage=next,".$currentPage?>
                         ">&raquo;</a>

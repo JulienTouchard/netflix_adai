@@ -5,7 +5,7 @@ if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
 } else {$pref = '../';}
 require_once($pref."Controller/RouteController.php");
 $routeController = new RouteController($_SERVER);
-require_once($routeController->getController("User"));
+require_once($routeController->getController("UserController"));
 $userController = new UserController;
 $login = $userController->login($_POST,$_SESSION);
 
