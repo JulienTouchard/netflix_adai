@@ -1,45 +1,44 @@
 <?php
 session_start();
-if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
+if ($_SERVER['PHP_SELF'] === '/POO/netflix/index.php') {
     $pref = "./";
-} else {$pref = '../';}
-require_once($pref."Controller/RouteController.php");
+} else {
+    $pref = '../';
+}
+require_once($pref . "Controller/RouteController.php");
 $routeController = new RouteController($_SERVER);
 require_once($routeController->getController("FilmController"));
-///////////////////////////////////
-$activePrev = false;
-$activePage = false;
 $nbPage = FilmController::getNbPage($_GET['genre']);
-if(isset($_GET['currentPage']) && !empty($_GET['currentPage'])){
-    $currentPage = strip_tags($_GET['currentPage']);
-    if (!is_numeric($currentPage)){
-        $tmpCurrentPage = explode(",", $currentPage);
-        if($tmpCurrentPage[0] === "next"){
-            $currentPage = intval($tmpCurrentPage[1])+1;
-        } else {
-            if($tmpCurrentPage[1] == 2){
-               $activePrev = true; 
-            } else {
-               $currentPage = intval($tmpCurrentPage[1])-1; 
-            }
-        }
-    }
+/////////////////////////////////// pagination ///////////////////////////////
+$activePrev = false;
+$activePage = 1;
+$activeNext = false;
+$currentPage = 1;
+if (isset($_GET['currentPage']) && !empty($_GET['currentPage'])) {
+    //pour exporter ce code dans un controller j'ai besoin des parametres suivants :
+    // $_GET['currentPage'],$nbPage
+    // les retours de ma methode : $activePrev,$activePage,$activeNext,$currentPage 
+    $responsePageManager = FilmController::pageManager($_GET['currentPage'], $nbPage, $activePrev, $activePage, $activeNext);
+    $activePrev = $responsePageManager[0];
+    $activePage = $responsePageManager[1];
+    $activeNext = $responsePageManager[2];
+    $currentPage = $responsePageManager[3];
 } else {
-    $currentPage = 1;
     $activePrev = true;
 }
-////////////////////////////////////////////
-$films = FilmController::getFilmsByGenre($_GET['genre'],$currentPage);
+//////////////////////////////////////////////////////////////////////////////
+$films = FilmController::getFilmsByGenre($_GET['genre'], $currentPage);
 $films = json_encode($films);
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Films</title>
+    <title>Categorie : <?= $_GET['genre'] ?></title>
     <link rel="stylesheet" href="https://bootswatch.com/5/cyborg/bootstrap.min.css">
     <link rel="stylesheet" href="<?= $routeController->getAssets() ?>css/card.css">
     <script>
@@ -54,38 +53,16 @@ $films = json_encode($films);
 
 <body>
     <header>
-        <?php include_once($routeController->getRoute("menu")); ?>
+        <?php include_once($routeController->getInc("menu")); ?>
     </header>
     <main>
         <section id="displayFilms">
             <h2><?= $_GET['genre'] ?></h2>
+            <?php include($routeController->getInc("pagination")); ?>
             <div id="cardsFrame"></div>
-            <div>
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link <?= $activePrev ? "disabled" : "" ?>" href="
-                        <?= $routeController->getRoute("categorie")."?genre=".$_GET['genre']."&currentPage=prev,".$currentPage?>
-                        ">&laquo;</a>
-                    </li>
-                    <?php for($i=1;$i<$nbPage+1;$i++) : ?>
-                    <li class="page-item active">
-                        <a class="page-link " href="
-                        <?= $routeController->getRoute("categorie")."?genre=".$_GET['genre']."&currentPage=$i"?>
-                        "><?=$i?></a>
-                    </li>
-                    <?php endfor ?>
-                    <li class="page-item ">
-                        <a class="page-link" href="
-                        <?= $routeController->getRoute("categorie")."?genre=".$_GET['genre']."&currentPage=next,".$currentPage?>
-                        ">&raquo;</a>
-                    </li>
-                </ul>
-            </div>
+            <?php include($routeController->getInc("pagination")); ?>
         </section>
     </main>
-
-
-
 </body>
 
 </html>

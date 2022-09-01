@@ -24,7 +24,7 @@ $login = $userController->login($_POST,$_SESSION);
 <body>
 <header>
         <?php
-        include_once($routeController->getRoute("menu"));
+        include_once($routeController->getInc("menu"));
         ?>
     </header>
     <main>

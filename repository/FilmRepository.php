@@ -7,24 +7,14 @@ $routeController = new RouteController($_SERVER);
 require_once($routeController->getInc("ConnectDB"));
 class FilmRepository
 {
-    public function getFilmById($id)
+    public function selectFilmById($id)
     {
         $pdo = new ConnectDB;
         $rq = "SELECT * FROM movies_full WHERE id_movie = :id";
         $requete = $pdo->connect()->prepare($rq);
         $requete->bindValue(":id", $id, PDO::PARAM_INT);
         $requete->execute();
-        $result = $requete->fetch();
-        $film = new Film(
-            intval($result['id_movie']),
-            $result['title'],
-            intval($result['year']),
-            $result['genres'],
-            $result['plot'],
-            $result['directors'],
-            $result['cast']
-        );
-        return $film;
+        return $requete->fetch();
     }
     public function selectFilmsR($nbFilm)
     {
@@ -63,5 +53,13 @@ class FilmRepository
         $requete->bindValue(":genre", '%'.$genre.'%', PDO::PARAM_STR);
         $requete->execute();
         return $requete->rowCount();
+    }
+    public function selectSearch($search){
+        $pdo = new ConnectDB;
+        $rq = "SELECT * FROM movies_full WHERE cast LIKE :search OR title LIKE :search OR directors LIKE :search LIMIT 0,20";
+        $requete = $pdo->connect()->prepare($rq);
+        $requete->bindValue(":search", '%'.$search.'%', PDO::PARAM_STR);
+        $requete->execute();
+        return $requete->fetchall();
     }
 }

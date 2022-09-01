@@ -5,6 +5,8 @@ if( $_SERVER['PHP_SELF'] === '/POO/netflix/index.php'){
 } else {$pref = '../';}
 require_once($pref."Controller/RouteController.php");
 $routeController = new RouteController($_SERVER);
+require_once($routeController->getController("FilmController"));
+$film = FilmController::getFilmById($_GET['id_movie']);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -22,5 +24,8 @@ $routeController = new RouteController($_SERVER);
         include_once($routeController->getInc("menu"));
         ?>
     </header>
+    <main>
+        
+    </main>
 </body>
 </html>

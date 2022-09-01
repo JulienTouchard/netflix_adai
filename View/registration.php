@@ -26,7 +26,7 @@ $register = $userController->register($_POST);
 <body>
 <header>
         <?php
-        include_once($routeController->getRoute("menu"));
+        include_once($routeController->getInc("menu"));
         ?>
     </header>
     <section class="formSignup">

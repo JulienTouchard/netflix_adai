@@ -33,7 +33,7 @@ class FilmController
     }
     public static function getFilmsByGenre($genre, $currentPage)
     {
-        
+
         $filmRepository = new FilmRepository;
         $routeController = new RouteController($_SERVER);
         $urlPoster = $routeController->getAssets() . "img/posters/";
@@ -66,5 +66,57 @@ class FilmController
         $filmRepository = new FilmRepository;
         $count = $filmRepository->pageByGenre($genre);
         return ceil($count / 20);
+    }
+    public static function pageManager($currentPage, $nbPage,$activePrev,$activePage,$activeNext)
+    {
+        $currentPage = strip_tags($currentPage);
+        if (!strpos($currentPage, ",")) {
+            $currentPage = intval($currentPage);
+        }
+        if (!is_numeric($currentPage)) {
+            $tmpCurrentPage = explode(",", $currentPage);
+            if ($tmpCurrentPage[0] === "next") {
+                $currentPage = intval($tmpCurrentPage[1]) + 1;
+                $activePage = $currentPage;
+                if ($currentPage == $nbPage) {
+                    $activeNext = true;
+                }
+            } else {
+                if ($tmpCurrentPage[1] == 2) {
+                    $activePrev = true;
+                } else {
+                    $currentPage = intval($tmpCurrentPage[1]) - 1;
+                    $activePage = $currentPage;
+                }
+            }
+        } else {
+            $activePage = $currentPage;
+            if ($currentPage == $nbPage) {
+                $activeNext = true;
+            }
+            if ($currentPage == 1) {
+                $activePrev = true;
+            }
+        }
+        return [ $activePrev,$activePage,$activeNext,$currentPage];
+    }
+    public static function getSearch($search){
+        $filmRepository = new FilmRepository;
+        // controle eventuel du resultat
+        return $filmRepository->selectSearch($search);
+    }
+    public static function getFilmById($id){
+        $filmRepository = new FilmRepository;
+        $result = $filmRepository->selectFilmById($id);
+        $film = new Film(
+            intval($result['id_movie']),
+            $result['title'],
+            intval($result['year']),
+            $result['genres'],
+            $result['plot'],
+            $result['directors'],
+            $result['cast']
+        );
+        var_dump($film);
     }
 }

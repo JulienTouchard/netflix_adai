@@ -33,7 +33,7 @@ $films = json_encode($films);
 
 <body>
     <header>
-    <?php include_once($routeController->getRoute("menu")); ?>
+    <?php include_once($routeController->getInc("menu")); ?>
     </header>
     <main>
         <div id="cardsFrame"></div>
